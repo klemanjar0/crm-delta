@@ -1,0 +1,63 @@
+.container
+  margin: 4rem 8rem
+
+.top-container
+  margin-top: 1rem
+  height: 2rem
+  width: 75%
+  display: flex
+  justify-content: flex-end
+  align-items: center
+  gap: 12px
+
+span
+  font-size: larger
+
+h6
+  color: white
+
+.icon
+  font-size: 22px
+
+section
+  width: 75%
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+input[type="text"]
+  padding: 8px
+  border-bottom-color: #8E8E93
+  border-bottom-width: 1px
+  border-bottom-left-radius: 1px
+  border-bottom-right-radius: 1px
+  border-right: 0
+  border-left: 0
+  border-top: 0
+  background-color: transparent
+
+  font-size: x-large
+  font-weight: bold
+
+  transition: border-bottom-color 300ms ease-in-out
+
+  &::placeholder
+    color: #8E8E93
+    font-size: large
+
+  &:focus
+    outline: none
+    border-bottom-color: white
+    border-bottom-width: 1px
+
+    &::placeholder
+      transition: color 300ms ease-in-out
+      color: transparent
+
+
+
+button
+  border: 0
+  padding: 0
+  background-color: transparent
+  cursor: pointer

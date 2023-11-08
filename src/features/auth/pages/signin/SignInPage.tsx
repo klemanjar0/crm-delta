@@ -3,11 +3,15 @@ import { useTranslate } from '../../../../locale';
 import './SignInPage.styles.sass';
 import ExpandingText from '../../../../components/ExpandingText/ExpandingText.tsx';
 import { colors } from '../../../../theme/colors.ts';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const SignInPage: React.FC = () => {
   const t = useTranslate();
+  const navigate = useNavigate();
 
-  const onLogIn = () => {};
+  const onLogIn = () => {
+    navigate('login');
+  };
 
   const onSignUp = () => {};
 
@@ -27,6 +31,8 @@ const SignInPage: React.FC = () => {
         size="x-large"
         fontWeight={600}
       />
+
+      <Outlet />
     </div>
   );
 };

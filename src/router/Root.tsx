@@ -7,6 +7,7 @@ import { RootState } from '../store';
 const Root: React.FC = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  //const routeKey = useSelector((state: RootState) => state.router.key);
 
   useRouterObserver();
 

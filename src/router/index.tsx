@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Root from './Root.tsx';
 import SignInPage from '../features/auth/pages/signin/SignInPage.tsx';
+import LoginPage from '../features/auth/pages/login/LoginPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -9,10 +10,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/signin',
-        element: <SignInPage />, //<ExpandingText text={'Hello world!'} size={'large'} color={'white'} active fontWeight={900} />,
+        element: <SignInPage />,
+
+        children: [
+          {
+            path: 'login',
+            element: <LoginPage />,
+          },
+        ],
       },
       {
-        path: 'settings',
+        path: 'settings/',
         element: <div>Settings!</div>,
       },
     ],
