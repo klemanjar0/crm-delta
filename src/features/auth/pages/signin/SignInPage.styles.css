@@ -1,0 +1,20 @@
+.container {
+  margin: 8em 2em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+span {
+  font-weight: bold;
+  font-size: 72px;
+}
+
+hr {
+  width: 100%;
+}
+
+/*# sourceMappingURL=SignInPage.styles.css.map */

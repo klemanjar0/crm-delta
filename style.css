@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "BoboFont";
+  src: url("fonts/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+}
+* {
+  font-family: "BoboFont", serif;
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,52 @@
+@mixin fontTransitionAnimated
+  transition: font-size 200ms
+
+.xxx-large
+  font-size: xxx-large
+
+.xx-large
+  font-size: xx-large
+
+.x-large
+  font-size: x-large
+
+.large
+  font-size: large
+
+.medium
+  font-size: medium
+
+.small
+  font-size: small
+
+span
+  @include fontTransitionAnimated
+  &.small
+    &:hover
+      font-size: medium
+      color: white
+
+  &.medium
+    &:hover
+      font-size: large
+      color: white
+
+  &.large
+    &:hover
+      font-size: x-large
+      color: white
+
+  &.x-large
+    &:hover
+      font-size: xx-large
+      color: white
+
+  &.xx-large
+    &:hover
+      font-size: xxx-large
+      color: white
+
+  &.xxx-large
+    &:hover
+      font-size: 72px
+      color: white

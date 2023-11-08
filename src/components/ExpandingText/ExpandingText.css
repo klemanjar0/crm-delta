@@ -1,0 +1,53 @@
+.xxx-large {
+  font-size: xxx-large;
+}
+
+.xx-large {
+  font-size: xx-large;
+}
+
+.x-large {
+  font-size: x-large;
+}
+
+.large {
+  font-size: large;
+}
+
+.medium {
+  font-size: medium;
+}
+
+.small {
+  font-size: small;
+}
+
+span {
+  transition: font-size 200ms;
+}
+span.small:hover {
+  font-size: medium;
+  color: white;
+}
+span.medium:hover {
+  font-size: large;
+  color: white;
+}
+span.large:hover {
+  font-size: x-large;
+  color: white;
+}
+span.x-large:hover {
+  font-size: xx-large;
+  color: white;
+}
+span.xx-large:hover {
+  font-size: xxx-large;
+  color: white;
+}
+span.xxx-large:hover {
+  font-size: 72px;
+  color: white;
+}
+
+/*# sourceMappingURL=ExpandingText.css.map */
