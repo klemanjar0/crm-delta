@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { DashboardState, Plane } from './types.ts';
+import { DashboardState, Pilot, Plane } from './types.ts';
 import { initAssetsState } from '../../../utils/constants.ts';
 import _size from 'lodash/size';
 
@@ -9,6 +9,7 @@ const initialState: DashboardState = {
   pilots: initAssetsState(),
   planes: initAssetsState(),
   planeCreateFetching: false,
+  pilotCreateFetching: false,
 };
 
 export const dashboardSlice = createSlice({
@@ -42,6 +43,33 @@ export const dashboardSlice = createSlice({
     createPlaneFailure: (state: DashboardState) => {
       state.planeCreateFetching = false;
     },
+    getPilotsRequest: (state: DashboardState) => {
+      state.pilots.fetching = true;
+      state.pilots.data = [];
+      state.pilots.error = null;
+      state.pilots.total = 0;
+    },
+    getPilotsSuccess: (state: DashboardState, action: PayloadAction<Pilot[]>) => {
+      state.pilots.fetching = false;
+      state.pilots.data = action.payload;
+      state.pilots.error = null;
+      state.pilots.total = _size(action.payload);
+      state.pilots.loaded = true;
+    },
+    getPilotsFailure: (state: DashboardState, action: PayloadAction<string>) => {
+      state.pilots.fetching = false;
+      state.pilots.error = action.payload;
+      state.pilots.loaded = false;
+    },
+    createPilotRequest: (state: DashboardState, _: PayloadAction<Omit<Pilot, 'id'>>) => {
+      state.pilotCreateFetching = true;
+    },
+    createPilotSuccess: (state: DashboardState) => {
+      state.pilotCreateFetching = false;
+    },
+    createPilotFailure: (state: DashboardState) => {
+      state.pilotCreateFetching = false;
+    },
   },
 });
 
@@ -52,6 +80,12 @@ export const {
   createPlaneSuccess,
   createPlaneFailure,
   createPlaneRequest,
+  getPilotsSuccess,
+  getPilotsFailure,
+  getPilotsRequest,
+  createPilotSuccess,
+  createPilotFailure,
+  createPilotRequest,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

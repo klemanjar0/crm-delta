@@ -29,4 +29,5 @@ export interface DashboardState {
   pilots: PilotsState;
   flights: FlightsState;
   planeCreateFetching: boolean;
+  pilotCreateFetching: boolean;
 }

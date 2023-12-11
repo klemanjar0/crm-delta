@@ -10,6 +10,7 @@ export const endpoints = {
   login: '/api/v1/auth/login',
   register: '/api/v1/auth/register',
   planes: '/api/v1/planes',
+  pilots: '/api/v1/pilots',
 };
 
 const server = 'http://localhost:5270';
