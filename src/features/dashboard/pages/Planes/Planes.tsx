@@ -13,7 +13,7 @@ import { showToast } from '../../../../utils/utility.tsx';
 const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
   return (
     <div key={item.id} className="plane-item-card">
-      <h3>{item.name}</h3>
+      <h3 className="plane-item-card-text">{item.name}</h3>
       <div className="plane-item-card-status">{parsePlaneStatus(item.status)}</div>
     </div>
   );
