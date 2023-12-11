@@ -32,7 +32,11 @@ const Planes: React.FC = () => {
 
   const renderBody = () => {
     if (assets.fetching) {
-      return <Spinner size={120} />;
+      return (
+        <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Spinner size={120} />
+        </div>
+      );
     }
 
     if (assets.error) {
