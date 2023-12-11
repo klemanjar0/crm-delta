@@ -43,7 +43,7 @@ const RegisterPage: React.FC = () => {
       <h2>Create new account</h2>
       <section>
         <input
-          placeholder={t("pages.signIn.email")}
+          placeholder={t('pages.signIn.email')}
           key="email"
           name="email"
           type="text"
@@ -51,7 +51,7 @@ const RegisterPage: React.FC = () => {
           onInput={onChange}
         />
         <input
-          placeholder={t("pages.signIn.password")}
+          placeholder={t('pages.signIn.password')}
           key="password"
           name="password"
           type="password"
@@ -62,9 +62,9 @@ const RegisterPage: React.FC = () => {
       </section>
 
       <div className="top-container">
-        <button disabled={fetching}>
+        <button className="button" disabled={fetching}>
           <HStack onClick={onSubmit}>
-            <span>{t("misc.submit")}</span>
+            <span>{t('misc.submit')}</span>
             {fetching ? <Spinner size={60} /> : <IoChevronForward style={{ fontSize: 22 }} />}
           </HStack>
         </button>

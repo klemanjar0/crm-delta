@@ -4,6 +4,7 @@ import {
   logInFailure,
   logInRequest,
   logInSuccess,
+  logOut,
   registerFailure,
   registerRequest,
   registerSuccess,
@@ -42,6 +43,14 @@ export function* loginSaga({ payload }: { payload: LoginPayload }): FixTypeLater
   }
 }
 
+export function* logOutSaga(): FixTypeLater {
+  yield put(setBackScene('/'));
+}
+
 export default function* root() {
-  yield all([takeLatest(registerRequest, registerSaga), takeLatest(logInRequest, loginSaga)]);
+  yield all([
+    takeLatest(registerRequest, registerSaga),
+    takeLatest(logInRequest, loginSaga),
+    takeLatest(logOut, logOutSaga),
+  ]);
 }

@@ -1,10 +1,13 @@
 import React from 'react';
 
 import './Dashboard.styles.sass';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../../auth/redux/reducer.ts';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onFlights = () => {
     navigate('flights', { relative: 'route' });
@@ -14,6 +17,9 @@ const Dashboard: React.FC = () => {
   };
   const onPlanes = () => {
     navigate('planes', { relative: 'route' });
+  };
+  const onLogOut = () => {
+    dispatch(logOut());
   };
 
   return (
@@ -35,8 +41,14 @@ const Dashboard: React.FC = () => {
           <button onClick={onPlanes}>
             <h3>Planes</h3>
           </button>
+
+          <button className="dashboard-logout-btn" onClick={onLogOut}>
+            <h3>Log Out</h3>
+          </button>
         </div>
       </div>
+
+      <Outlet />
     </section>
   );
 };

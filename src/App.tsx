@@ -4,6 +4,7 @@ import '../style.sass';
 import router from './router';
 import { Provider } from 'react-redux';
 import store from './store';
+import './theme/styles.sass';
 
 function App() {
   return (

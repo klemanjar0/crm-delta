@@ -4,6 +4,7 @@ import SignInPage from '../features/auth/pages/signin/SignInPage.tsx';
 import LoginPage from '../features/auth/pages/login/LoginPage.tsx';
 import RegisterPage from '../features/auth/pages/register/RegisterPage.tsx';
 import Dashboard from '../features/dashboard/pages/Dashboard/Dashboard.tsx';
+import Planes from '../features/dashboard/pages/Planes/Planes.tsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,20 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <Dashboard />,
+        children: [
+          {
+            path: 'planes',
+            element: <Planes />,
+          },
+          {
+            path: 'flights',
+            element: <div>flights</div>,
+          },
+          {
+            path: 'pilots',
+            element: <div>pilots</div>,
+          },
+        ],
       },
     ],
   },

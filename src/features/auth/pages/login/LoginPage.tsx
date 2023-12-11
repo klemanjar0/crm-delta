@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
       </section>
 
       <div className="top-container">
-        <button>
+        <button className="button">
           <HStack onClick={onSubmit}>
             <span>{t('misc.submit')}</span>
             {fetching ? <Spinner size={60} /> : <IoChevronForward style={{ fontSize: 22 }} />}
