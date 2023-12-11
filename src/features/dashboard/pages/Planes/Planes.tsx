@@ -72,12 +72,16 @@ const Planes: React.FC = () => {
   return (
     <section className="planes-container">
       <div className="planes-left-panel">
-        <section>
-          <h2>New Plane</h2>
-          <h6>Type Plane Name</h6>
-          <input placeholder={'Name'} key="name" name="name" type="text" value={name} onInput={onChange} />
-
-          <h6>Select Plane Status</h6>
+        <section style={{ width: '100%' }}>
+          <h2>Create New Plane</h2>
+          <input
+            placeholder={'Type Plane Name...'}
+            key="name"
+            name="name"
+            type="text"
+            value={name}
+            onInput={onChange}
+          />
           <div className="ready-status-row">
             <span>Ready To Flight</span>
             <input
