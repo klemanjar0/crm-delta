@@ -90,7 +90,7 @@ const Planes: React.FC = () => {
               name="status"
               type="checkbox"
               checked={isReadyToFlight}
-              onInput={onCheckBoxChange}
+              onChange={onCheckBoxChange}
             />
           </div>
         </section>
