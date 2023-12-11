@@ -34,6 +34,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="container">
+      <h2>Login to existing account</h2>
       <section>
         <input
           placeholder={t('pages.signIn.email')}

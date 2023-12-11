@@ -7,15 +7,15 @@ import { RootState } from '../store';
 const Root: React.FC = () => {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  //const routeKey = useSelector((state: RootState) => state.router.key);
+  const routeKey = useSelector((state: RootState) => state.router.currentRoute);
 
   useRouterObserver();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !routeKey.includes('signin')) {
       navigate('/signin', { replace: true });
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, routeKey]);
 
   return <Outlet />;
 };

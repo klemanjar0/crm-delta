@@ -3,6 +3,7 @@ import Root from './Root.tsx';
 import SignInPage from '../features/auth/pages/signin/SignInPage.tsx';
 import LoginPage from '../features/auth/pages/login/LoginPage.tsx';
 import RegisterPage from '../features/auth/pages/register/RegisterPage.tsx';
+import Dashboard from '../features/dashboard/pages/Dashboard/Dashboard.tsx';
 
 const router = createBrowserRouter([
   {
@@ -24,9 +25,13 @@ const router = createBrowserRouter([
           },
         ],
       },
+      // {
+      //   path: 'settings/',
+      //   element: <div>Settings!</div>,
+      // },
       {
-        path: 'settings/',
-        element: <div>Settings!</div>,
+        path: '',
+        element: <Dashboard />,
       },
     ],
   },
