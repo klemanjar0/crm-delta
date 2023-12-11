@@ -8,6 +8,7 @@ import { createPlaneRequest, getPlanesRequest } from '../../redux/reducer.ts';
 import { Plane } from '../../redux/types.ts';
 import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { parsePlaneStatus } from '../../redux/utils.ts';
+import { showToast } from '../../../../utils/utility.tsx';
 
 const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
   return (
@@ -50,6 +51,11 @@ const Planes: React.FC = () => {
   };
 
   const handleCreatePlane = () => {
+    if (!name) {
+      showToast('Fill the plane name first.');
+      return;
+    }
+
     dispatch(createPlaneRequest({ name, status: isReadyToFlight ? 'ready_to_flight' : 'broken' }));
     setName('');
     setIsReadyToFlight(true);
@@ -80,6 +86,7 @@ const Planes: React.FC = () => {
             />
           </div>
         </section>
+
         <div className="outlined-div-create-plane">
           <button disabled={creating} onClick={handleCreatePlane} className="button-create-row">
             <h2 className="create-button-text">Create Plane</h2>
