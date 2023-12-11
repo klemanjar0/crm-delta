@@ -39,7 +39,7 @@ const RegisterPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-register">
       <h2>Create new account</h2>
       <section>
         <input

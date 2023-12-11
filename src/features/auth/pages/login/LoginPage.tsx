@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className="container-login">
       <h2>Login to existing account</h2>
       <section>
         <input

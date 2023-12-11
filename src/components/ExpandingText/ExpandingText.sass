@@ -19,12 +19,14 @@
 .small
   font-size: small
 
-span
+.expanding-text
   @include fontTransitionAnimated
   &.small
     &:hover
       font-size: medium
       color: white
+      &.active
+        font-size: medium
 
   &.medium
     &:hover
@@ -35,9 +37,15 @@ span
     &:hover
       font-size: x-large
       color: white
+    &.active
+      font-size: x-large
+      color: white
 
   &.x-large
     &:hover
+      font-size: xx-large
+      color: white
+    &.active
       font-size: xx-large
       color: white
 
@@ -45,8 +53,14 @@ span
     &:hover
       font-size: xxx-large
       color: white
+    &.active
+      font-size: xxx-large
+      color: white
 
   &.xxx-large
     &:hover
+      font-size: 72px
+      color: white
+    &.active
       font-size: 72px
       color: white

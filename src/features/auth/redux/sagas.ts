@@ -9,7 +9,7 @@ import {
   registerRequest,
   registerSuccess,
 } from './reducer.ts';
-import { getErrorMessage } from '../../../utils/utility.tsx';
+import { getErrorMessage, showToast } from '../../../utils/utility.tsx';
 import { buildHeaders, callApi, endpoints } from '../../../api';
 import { RootState } from '../../../store';
 import { FixTypeLater } from 'react-redux';
@@ -26,6 +26,7 @@ export function* registerSaga({ payload }: { payload: RegisterPayload }): FixTyp
     yield put(setBackScene('/'));
   } catch (e) {
     yield put(registerFailure(getErrorMessage(e)));
+    showToast('Something wrong during register.');
   }
 }
 
@@ -40,6 +41,7 @@ export function* loginSaga({ payload }: { payload: LoginPayload }): FixTypeLater
     yield put(setBackScene('/'));
   } catch (e) {
     yield put(logInFailure(getErrorMessage(e)));
+    showToast('Something wrong during login.');
   }
 }
 

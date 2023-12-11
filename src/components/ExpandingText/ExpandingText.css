@@ -22,30 +22,49 @@
   font-size: small;
 }
 
-span {
+.expanding-text {
   transition: font-size 200ms;
 }
-span.small:hover {
+.expanding-text.small:hover {
   font-size: medium;
   color: white;
 }
-span.medium:hover {
+.expanding-text.small:hover.active {
+  font-size: medium;
+}
+.expanding-text.medium:hover {
   font-size: large;
   color: white;
 }
-span.large:hover {
+.expanding-text.large:hover {
   font-size: x-large;
   color: white;
 }
-span.x-large:hover {
+.expanding-text.large.active {
+  font-size: x-large;
+  color: white;
+}
+.expanding-text.x-large:hover {
   font-size: xx-large;
   color: white;
 }
-span.xx-large:hover {
+.expanding-text.x-large.active {
+  font-size: xx-large;
+  color: white;
+}
+.expanding-text.xx-large:hover {
   font-size: xxx-large;
   color: white;
 }
-span.xxx-large:hover {
+.expanding-text.xx-large.active {
+  font-size: xxx-large;
+  color: white;
+}
+.expanding-text.xxx-large:hover {
+  font-size: 72px;
+  color: white;
+}
+.expanding-text.xxx-large.active {
   font-size: 72px;
   color: white;
 }

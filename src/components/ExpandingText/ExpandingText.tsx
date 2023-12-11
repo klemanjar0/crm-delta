@@ -8,10 +8,11 @@ interface Props {
   color: string;
   fontWeight: number;
   onClick?: () => void;
+  className?: string;
 }
 
 const ExpandingText: React.FC<Props> = (props) => {
-  const { text, size, color, active = true, fontWeight, onClick } = props;
+  const { text, size, color, active = true, fontWeight, onClick, className = '' } = props;
 
   const styles: CSSProperties = {
     color,
@@ -21,7 +22,7 @@ const ExpandingText: React.FC<Props> = (props) => {
   };
 
   return (
-    <span onClick={onClick} style={styles} className={size}>
+    <span onClick={onClick} style={styles} className={`expanding-text ${size} ${className}`}>
       {text}
     </span>
   );

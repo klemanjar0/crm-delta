@@ -1,10 +1,15 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import _set from 'lodash/set';
 import { RootState } from '../store';
+import DispatchService from '../services/DispatchService.ts';
+import { logOut } from '../features/auth/redux/reducer.ts';
+import { toast } from 'react-toastify';
+import { showToast } from '../utils/utility.tsx';
 
 export const endpoints = {
   login: '/api/v1/auth/login',
   register: '/api/v1/auth/register',
+  planes: '/api/v1/planes',
 };
 
 const server = 'http://localhost:5270';
@@ -26,6 +31,13 @@ export const responseInterceptors = {
     return response;
   },
   onRejected: (error: AxiosError) => {
+    const statusCode = error?.response?.status;
+
+    if (statusCode === 401) {
+      showToast('Access Token has expired');
+      DispatchService.dispatch(logOut());
+    }
+
     throw error;
   },
 };
@@ -40,14 +52,17 @@ const NetworkService = () => {
 };
 
 export const buildHeaders = (state: RootState, data: unknown, method = 'POST') => {
-  const _accessToken = state.auth.accessToken;
+  const accessToken = state.auth.accessToken;
 
   const jsonHeader = data ? { 'Content-Type': 'application/json' } : {};
+
+  const access = accessToken ? `Bearer ${accessToken}` : undefined;
 
   return {
     method,
     headers: {
       ...jsonHeader,
+      Authorization: access,
     },
     ...(data ? { data } : {}),
   };

@@ -5,12 +5,17 @@ import router from './router';
 import { Provider } from 'react-redux';
 import store from './store';
 import './theme/styles.sass';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <>
+      <ToastContainer />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </>
   );
 }
 
