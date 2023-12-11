@@ -13,10 +13,14 @@ const SignInPage: React.FC = () => {
     navigate('login');
   };
 
-  const onSignUp = () => {};
+  const onSignUp = () => {
+    navigate('register');
+  };
 
   return (
     <div className="container">
+      <h1>Avian</h1>
+      <hr className="mb-2" />
       <ExpandingText
         onClick={onLogIn}
         text={t('pages.signIn.logIn')}

@@ -17,4 +17,14 @@ hr {
   width: 100%;
 }
 
+h1 {
+  font-weight: 500;
+  font-size: 48px;
+  margin-bottom: 0.2rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
 /*# sourceMappingURL=SignInPage.styles.css.map */

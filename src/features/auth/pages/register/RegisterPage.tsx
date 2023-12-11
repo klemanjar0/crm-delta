@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { IoChevronForward } from 'react-icons/io5';
 
-import './LoginPage.styles.sass';
+import './RegisterPage.styles.sass';
 import { useTranslate } from '../../../../locale';
 import HStack from '../../../../components/HStack/HStack.tsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { logInRequest, resetAuthError } from '../../redux/reducer.ts';
-import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { RootState } from '../../../../store';
+import { registerRequest, resetAuthError } from '../../redux/reducer.ts';
+import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { colors } from '../../../../theme/colors.ts';
 
-const initialUserState = { email: '', password: '' };
+const initialUserState = { email: '', password: '', role: 'regular' };
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const t = useTranslate();
   const dispatch = useDispatch();
+
   const fetching = useSelector((state: RootState) => state.auth.fetching);
   const error = useSelector((state: RootState) => state.auth.error);
 
@@ -25,7 +26,12 @@ const LoginPage: React.FC = () => {
   };
 
   const onSubmit = () => {
-    dispatch(logInRequest(user));
+    if (fetching) {
+      return;
+    }
+
+    dispatch(registerRequest(user));
+    setUser(initialUserState);
   };
 
   useEffect(() => {
@@ -51,10 +57,11 @@ const LoginPage: React.FC = () => {
           value={user.password}
           onInput={onChange}
         />
+        <span>{`User Role: ${user.role}`}</span>
       </section>
 
       <div className="top-container">
-        <button>
+        <button disabled={fetching}>
           <HStack onClick={onSubmit}>
             <span>{t('misc.submit')}</span>
             {fetching ? <Spinner size={60} /> : <IoChevronForward style={{ fontSize: 22 }} />}
@@ -67,4 +74,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

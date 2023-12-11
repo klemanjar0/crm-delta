@@ -5,6 +5,7 @@ import { RouterState } from './types.ts';
 const initialState: RouterState = {
   key: 'initial',
   currentRoute: 'initial',
+  backScene: null,
 };
 
 export const routerSlice = createSlice({
@@ -17,9 +18,12 @@ export const routerSlice = createSlice({
     setCurrentRoute: (state: RouterState, action: PayloadAction<string>) => {
       state.currentRoute = action.payload;
     },
+    setBackScene: (state: RouterState, action: PayloadAction<string | null>) => {
+      state.backScene = action.payload;
+    },
   },
 });
 
-export const { setRouterKey, setCurrentRoute } = routerSlice.actions;
+export const { setRouterKey, setCurrentRoute, setBackScene } = routerSlice.actions;
 
 export default routerSlice.reducer;
