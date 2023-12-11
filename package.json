@@ -11,8 +11,12 @@
     "prettier-format": "prettier --config .prettierrc 'src/**/*.tsx' --write"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.6.2",
+    "framer-motion": "^10.16.16",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",

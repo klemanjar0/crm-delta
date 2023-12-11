@@ -6,15 +6,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { createPlaneRequest, getPlanesRequest } from '../../redux/reducer.ts';
 import { Plane } from '../../redux/types.ts';
-import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { parsePlaneStatus } from '../../redux/utils.ts';
 import { showToast } from '../../../../utils/utility.tsx';
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  Input,
+  Select,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 
 const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
+  const { value, color } = parsePlaneStatus(item.status);
   return (
     <div key={item.id} className="plane-item-card">
-      <h3 className="plane-item-card-text">{item.name}</h3>
-      <div className="plane-item-card-status">{parsePlaneStatus(item.status)}</div>
+      <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
+        {item.name}
+      </Text>
+      <Badge variant="subtle" colorScheme={color}>
+        {value}
+      </Badge>
     </div>
   );
 };
@@ -34,7 +52,7 @@ const Planes: React.FC = () => {
     if (assets.fetching) {
       return (
         <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-          <Spinner size={120} />
+          <Spinner />
         </div>
       );
     }
@@ -65,46 +83,44 @@ const Planes: React.FC = () => {
     setIsReadyToFlight(true);
   };
 
-  const onCheckBoxChange = () => {
-    setIsReadyToFlight((prev) => !prev);
+  const onStatusChange = (e: any) => {
+    setIsReadyToFlight(e.target.value === 'ready_to_flight');
   };
 
   return (
     <section className="planes-container">
       <div className="planes-left-panel">
-        <section style={{ width: '100%' }}>
-          <h2>Create New Plane</h2>
-          <input
-            placeholder={'Type Plane Name...'}
-            key="name"
-            name="name"
-            type="text"
-            value={name}
-            onInput={onChange}
-          />
-          <div className="ready-status-row">
-            <span>Ready To Flight</span>
-            <input
-              placeholder={'Ready To Flight'}
-              key="status"
-              name="status"
-              type="checkbox"
-              checked={isReadyToFlight}
-              onChange={onCheckBoxChange}
-            />
-          </div>
-        </section>
-
-        <div className="outlined-div-create-plane">
-          <button disabled={creating} onClick={handleCreatePlane} className="button-create-row">
-            <h2 className="create-button-text">Create Plane</h2>
-            {creating ? <Spinner size={60} /> : <IoChevronForward style={{ fontSize: 22 }} />}
-          </button>
-        </div>
+        <Card style={{ width: '100%' }} justifyContent="flex-start">
+          <CardHeader>
+            <Text style={{ fontSize: 32, fontWeight: 600 }}>Create New Plane</Text>
+          </CardHeader>
+          <Divider />
+          <CardBody justifyContent="flex-start" flexDirection={'column'}>
+            <Input placeholder={'Type Plane Name...'} key="name" name="name" value={name} onInput={onChange} />
+            <Box mt={2} width="100%">
+              <Select
+                isRequired
+                value={isReadyToFlight ? 'ready_to_flight' : 'broken'}
+                onChange={onStatusChange}
+                placeholder="Select status"
+              >
+                <option value="ready_to_flight">Ready</option>
+                <option value="broken">Broken</option>
+              </Select>
+            </Box>
+          </CardBody>
+          <CardFooter>
+            <Button flex={1} disabled={creating} onClick={handleCreatePlane}>
+              <Text className="create-button-text">Create Plane</Text>
+              <Box ml={1}>{creating ? <Spinner /> : <IoChevronForward style={{ fontSize: 22 }} />}</Box>
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
 
       <div className="planes-right-panel">
-        <h2>Planes</h2>
+        <Text style={{ fontSize: 32, fontWeight: 700 }}>Planes</Text>
+        <Divider />
         {renderBody()}
       </div>
     </section>

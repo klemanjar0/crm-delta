@@ -44,8 +44,6 @@ export const authSlice = createSlice({
       state.fetching = true;
     },
     logInSuccess: (state: AuthState, action: PayloadAction<string>) => {
-      console.log('action');
-      console.log(action);
       state.fetching = false;
       state.accessToken = action.payload;
       state.isLoggedIn = true;

@@ -5,6 +5,7 @@ import LoginPage from '../features/auth/pages/login/LoginPage.tsx';
 import RegisterPage from '../features/auth/pages/register/RegisterPage.tsx';
 import Dashboard from '../features/dashboard/pages/Dashboard/Dashboard.tsx';
 import Planes from '../features/dashboard/pages/Planes/Planes.tsx';
+import DefaultOutlet from '../features/dashboard/pages/DefaultOutlet/DefaultOutlet.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
         path: '',
         element: <Dashboard />,
         children: [
+          {
+            path: '',
+            element: <DefaultOutlet />,
+          },
           {
             path: 'planes',
             element: <Planes />,

@@ -3,12 +3,12 @@ import { IoChevronForward } from 'react-icons/io5';
 
 import './RegisterPage.styles.sass';
 import { useTranslate } from '../../../../locale';
-import HStack from '../../../../components/HStack/HStack.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { registerRequest, resetAuthError } from '../../redux/reducer.ts';
 import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { colors } from '../../../../theme/colors.ts';
+import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react';
 
 const initialUserState = { email: '', password: '', role: 'regular' };
 
@@ -39,9 +39,11 @@ const RegisterPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="container-register">
-      <h2>Create new account</h2>
-      <section>
+    <Box w="100%" className="container-register">
+      <Center mb={2}>
+        <Text>Create new account</Text>
+      </Center>
+      <VStack w="100%">
         <input
           placeholder={t('pages.signIn.email')}
           key="email"
@@ -59,7 +61,7 @@ const RegisterPage: React.FC = () => {
           onInput={onChange}
         />
         <span>{`User Role: ${user.role}`}</span>
-      </section>
+      </VStack>
 
       <div className="top-container">
         <button className="button" disabled={fetching}>
@@ -71,7 +73,7 @@ const RegisterPage: React.FC = () => {
       </div>
 
       {error ? <span style={{ color: colors.sunsetOrange }}>{error}</span> : null}
-    </div>
+    </Box>
   );
 };
 

@@ -4,6 +4,7 @@ import './Dashboard.styles.sass';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../../auth/redux/reducer.ts';
+import { Text } from '@chakra-ui/react';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -26,24 +27,24 @@ const Dashboard: React.FC = () => {
     <section className="dashboard-container">
       <div className="nav-bar">
         <div>
-          <h1>Avian</h1>
+          <Text style={{ fontWeight: 800, fontSize: 22 }}>Avian</Text>
         </div>
 
         <div className="tabs">
           <button onClick={onFlights}>
-            <h3>Flights</h3>
+            <Text style={{ fontWeight: 500, fontSize: 18 }}>Flights</Text>
           </button>
 
           <button onClick={onPilots}>
-            <h3>Pilots</h3>
+            <Text style={{ fontWeight: 500, fontSize: 18 }}>Pilots</Text>
           </button>
 
           <button onClick={onPlanes}>
-            <h3>Planes</h3>
+            <Text style={{ fontWeight: 500, fontSize: 18 }}>Planes</Text>
           </button>
 
           <button className="dashboard-logout-btn" onClick={onLogOut}>
-            <h3>Log Out</h3>
+            <Text style={{ fontWeight: 500, fontSize: 18 }}>Log Out</Text>
           </button>
         </div>
       </div>

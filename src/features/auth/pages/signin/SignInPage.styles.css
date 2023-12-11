@@ -8,15 +8,6 @@
   align-content: flex-start;
 }
 
-span {
-  font-weight: bold;
-  font-size: 72px;
-}
-
-hr {
-  width: 100%;
-}
-
 .h1-sign-in {
   font-weight: 500;
   font-size: 48px;

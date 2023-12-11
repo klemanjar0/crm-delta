@@ -1,10 +1,10 @@
 export const parsePlaneStatus = (status: string) => {
   switch (status) {
     case 'ready_to_flight':
-      return 'Ready To Flight';
+      return { value: 'Ready To Flight', color: 'green' };
     case 'broken':
-      return 'Broken';
+      return { value: 'Broken', color: 'red' };
     default:
-      return status;
+      return { value: status, color: 'purple' };
   }
 };

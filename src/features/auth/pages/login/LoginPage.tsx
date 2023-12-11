@@ -3,12 +3,12 @@ import { IoChevronForward } from 'react-icons/io5';
 
 import './LoginPage.styles.sass';
 import { useTranslate } from '../../../../locale';
-import HStack from '../../../../components/HStack/HStack.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { logInRequest, resetAuthError } from '../../redux/reducer.ts';
 import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { RootState } from '../../../../store';
 import { colors } from '../../../../theme/colors.ts';
+import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react';
 
 const initialUserState = { email: '', password: '' };
 
@@ -33,9 +33,11 @@ const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="container-login">
-      <h2>Login to existing account</h2>
-      <section>
+    <Box className="container-login">
+      <Center mb={2}>
+        <Text>Login to existing account</Text>
+      </Center>
+      <VStack w="100%">
         <input
           placeholder={t('pages.signIn.email')}
           key="email"
@@ -52,7 +54,7 @@ const LoginPage: React.FC = () => {
           value={user.password}
           onInput={onChange}
         />
-      </section>
+      </VStack>
 
       <div className="top-container">
         <button className="button">
@@ -64,7 +66,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {error ? <span style={{ color: colors.sunsetOrange }}>{error}</span> : null}
-    </div>
+    </Box>
   );
 };
 

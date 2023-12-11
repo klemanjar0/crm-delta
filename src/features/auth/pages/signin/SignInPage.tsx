@@ -30,7 +30,7 @@ const SignInPage: React.FC = () => {
         <ExpandingText
           onClick={onLogIn}
           text={t('pages.signIn.logIn')}
-          color={isOnLogin ? colors.white : colors.dolphinIOS}
+          color={isOnLogin ? colors.black : colors.dolphinIOS}
           size="xxx-large"
           fontWeight={800}
           className={isOnLogin ? 'active' : undefined}
@@ -40,7 +40,7 @@ const SignInPage: React.FC = () => {
         <ExpandingText
           onClick={onSignUp}
           text={t('pages.signIn.signUp')}
-          color={isOnRegister ? colors.white : colors.dolphinIOS}
+          color={isOnRegister ? colors.black : colors.dolphinIOS}
           size="x-large"
           fontWeight={600}
           className={isOnRegister ? 'active' : undefined}
