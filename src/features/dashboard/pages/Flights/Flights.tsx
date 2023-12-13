@@ -61,6 +61,7 @@ import {
 import { colors } from '../../../../theme/colors.ts';
 import moment from 'moment/moment';
 import _find from 'lodash/find';
+import _get from 'lodash/get';
 
 const getStatusColor = (status: FlightStatus) => {
   switch (status) {
@@ -250,7 +251,7 @@ const Flights: React.FC = () => {
 
     return assets.data.map((it: Flight) => {
       const plane = _find(planesAssets.data, (p: Plane) => p.id === it.plane_id);
-      const pilot = _find(pilotsAssets.data, (p: Pilot) => p.id === it.pilots[0]);
+      const pilot = _find(pilotsAssets.data, (p: Pilot) => p.id === _get(it, ['pilots', 0]));
       return renderFlightItem(it, {
         plane,
         pilot,
