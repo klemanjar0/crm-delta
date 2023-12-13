@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { IoChevronForward, IoPerson } from 'react-icons/io5';
+import { IoChevronForward, IoPerson, IoTrash } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { createPilotRequest, getPilotsRequest } from '../../redux/reducer.ts';
+import { createPilotRequest, deleteEntityRequest, getPilotsRequest } from '../../redux/reducer.ts';
 import { Pilot } from '../../redux/types.ts';
 import { showToast } from '../../../../utils/utility.tsx';
 import {
@@ -22,7 +22,11 @@ import {
 } from '@chakra-ui/react';
 import { colors } from '../../../../theme/colors.ts';
 
-const renderPilotItem: React.FC<Pilot> = (item: Pilot) => {
+const renderPilotItem: React.FC<Pilot> = (item: Pilot, isRemoving: boolean) => {
+  const dispatch = useDispatch();
+  const onRemove = () => {
+    dispatch(deleteEntityRequest({ id: item.id, type: 'PILOT' }));
+  };
   return (
     <div key={item.id} className="plane-item-card">
       <HStack>
@@ -31,9 +35,14 @@ const renderPilotItem: React.FC<Pilot> = (item: Pilot) => {
           {item.name}
         </Text>
       </HStack>
-      <Badge variant="subtle" colorScheme={'purple'}>
-        {item.qualification}
-      </Badge>
+      <HStack>
+        <Badge variant="subtle" colorScheme={'purple'}>
+          {item.qualification}
+        </Badge>
+        <Button isLoading={isRemoving} onClick={onRemove}>
+          <IoTrash />
+        </Button>
+      </HStack>
     </div>
   );
 };
@@ -44,6 +53,7 @@ const Pilots: React.FC = () => {
   const creating = useSelector((state: RootState) => state.dashboard.pilotCreateFetching);
   const [name, setName] = useState<string>('');
   const [qualification, setQualification] = useState<string>('');
+  const removeInProgress = useSelector((state: RootState) => state.dashboard.deleteInProgress);
 
   useEffect(() => {
     dispatch(getPilotsRequest());
@@ -66,7 +76,7 @@ const Pilots: React.FC = () => {
       return <span>No data.</span>;
     }
 
-    return assets.data.map(renderPilotItem);
+    return assets.data.map((it) => renderPilotItem(it, removeInProgress.includes(it.id)));
   };
 
   const onChange = (e: any) => {

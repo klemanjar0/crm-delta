@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-import { IoAirplane, IoAirplaneOutline, IoCheckmark, IoChevronBack, IoChevronForward, IoPerson } from 'react-icons/io5';
+import {
+  IoAirplane,
+  IoAirplaneOutline,
+  IoCheckmark,
+  IoChevronBack,
+  IoChevronForward,
+  IoPerson,
+  IoTrash,
+} from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { createFlightRequest, getFlightsRequest, getPilotsRequest, getPlanesRequest } from '../../redux/reducer.ts';
+import {
+  createFlightRequest,
+  deleteEntityRequest,
+  getFlightsRequest,
+  getPilotsRequest,
+  getPlanesRequest,
+} from '../../redux/reducer.ts';
 import { Flight, FlightStatus, Pilot, Plane } from '../../redux/types.ts';
 import {
   Badge,
@@ -52,7 +66,14 @@ const getStatusColor = (status: FlightStatus) => {
   }
 };
 
-const renderFlightItem: React.FC<Flight> = (item: Flight, extra: { plane?: Plane; pilot?: Pilot }) => {
+const renderFlightItem: React.FC<Flight> = (
+  item: Flight,
+  extra: { plane?: Plane; pilot?: Pilot; isRemoving: boolean },
+) => {
+  const dispatch = useDispatch();
+  const onRemove = () => {
+    dispatch(deleteEntityRequest({ id: item.id, type: 'FLIGHT' }));
+  };
   return (
     <Box key={item.id} w="100%" px={4} py={6} backgroundColor={colors.lavender} borderRadius={4} my={4}>
       <Center>
@@ -112,6 +133,16 @@ const renderFlightItem: React.FC<Flight> = (item: Flight, extra: { plane?: Plane
           </HStack>
         ) : null}
       </HStack>
+
+      <Box w={2} h={2} />
+
+      <HStack flexDirection="row-reverse">
+        <Button flexDirection="row" isLoading={extra.isRemoving} onClick={onRemove}>
+          <IoTrash />
+          <Box w={2} h={2} />
+          <Text>Delete flight record</Text>
+        </Button>
+      </HStack>
     </Box>
   );
 };
@@ -126,6 +157,8 @@ const Flights: React.FC = () => {
   const dispatch = useDispatch();
   const assets = useSelector((state: RootState) => state.dashboard.flights);
   const creating = useSelector((state: RootState) => state.dashboard.flightCreateFetching);
+  const removeInProgress = useSelector((state: RootState) => state.dashboard.deleteInProgress);
+
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
   const [comment, setComment] = useState<string>('');
@@ -170,7 +203,7 @@ const Flights: React.FC = () => {
     return assets.data.map((it: Flight) => {
       const plane = _find(planesAssets.data, (p: Plane) => p.id === it.plane_id);
       const pilot = _find(pilotsAssets.data, (p: Pilot) => p.id === it.pilots[0]);
-      return renderFlightItem(it, { plane, pilot });
+      return renderFlightItem(it, { plane, pilot, isRemoving: removeInProgress.includes(it.id) });
     });
   };
 

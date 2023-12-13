@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import './Planes.styles.sass';
-import { IoAirplane, IoChevronForward } from 'react-icons/io5';
+import { IoAirplane, IoChevronForward, IoTrash } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
-import { createPlaneRequest, getPlanesRequest } from '../../redux/reducer.ts';
+import { createPlaneRequest, deleteEntityRequest, getPlanesRequest } from '../../redux/reducer.ts';
 import { Plane } from '../../redux/types.ts';
 import { parsePlaneStatus } from '../../redux/utils.ts';
 import { showToast } from '../../../../utils/utility.tsx';
@@ -25,8 +25,13 @@ import {
 } from '@chakra-ui/react';
 import { colors } from '../../../../theme/colors.ts';
 
-const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
+const renderPlaneItem: React.FC<Plane> = (item: Plane, isRemoving: boolean) => {
+  const dispatch = useDispatch();
+  const onRemove = () => {
+    dispatch(deleteEntityRequest({ id: item.id, type: 'PLANE' }));
+  };
   const { value, color } = parsePlaneStatus(item.status);
+
   return (
     <div key={item.id} className="plane-item-card">
       <HStack>
@@ -35,9 +40,14 @@ const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
           {item.name.substring(0, 20)}
         </Text>
       </HStack>
-      <Badge variant="subtle" colorScheme={color}>
-        {value}
-      </Badge>
+      <HStack>
+        <Badge variant="subtle" colorScheme={color}>
+          {value}
+        </Badge>
+        <Button isLoading={isRemoving} onClick={onRemove}>
+          <IoTrash />
+        </Button>
+      </HStack>
     </div>
   );
 };
@@ -48,6 +58,7 @@ const Planes: React.FC = () => {
   const creating = useSelector((state: RootState) => state.dashboard.planeCreateFetching);
   const [name, setName] = useState<string>('');
   const [isReadyToFlight, setIsReadyToFlight] = useState<boolean>(true);
+  const removeInProgress = useSelector((state: RootState) => state.dashboard.deleteInProgress);
 
   useEffect(() => {
     dispatch(getPlanesRequest());
@@ -70,7 +81,7 @@ const Planes: React.FC = () => {
       return <span>No data.</span>;
     }
 
-    return assets.data.map(renderPlaneItem);
+    return assets.data.map((it) => renderPlaneItem(it, removeInProgress.includes(it.id)));
   };
 
   const onChange = (e: any) => {

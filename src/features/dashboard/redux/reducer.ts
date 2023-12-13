@@ -1,8 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { DashboardState, Flight, Pilot, Plane, User } from './types.ts';
+import { DashboardState, DeleteEntityRequest, Flight, Pilot, Plane, User } from './types.ts';
 import { initAssetsState } from '../../../utils/constants.ts';
 import _size from 'lodash/size';
+import { RootState } from '../../../store';
+import _find from 'lodash/find';
 
 const initialState: DashboardState = {
   flights: initAssetsState(),
@@ -12,6 +14,7 @@ const initialState: DashboardState = {
   planeCreateFetching: false,
   pilotCreateFetching: false,
   flightCreateFetching: false,
+  deleteInProgress: [],
 };
 
 export const dashboardSlice = createSlice({
@@ -117,8 +120,20 @@ export const dashboardSlice = createSlice({
       state.users.error = action.payload;
       state.users.loaded = false;
     },
+    deleteEntityRequest: (state: DashboardState, action: PayloadAction<DeleteEntityRequest>) => {
+      state.deleteInProgress = [...state.deleteInProgress, action.payload.id];
+    },
+    deleteEntitySuccess: (state: DashboardState, action: PayloadAction<string>) => {
+      state.deleteInProgress = state.deleteInProgress.filter((it) => it !== action.payload);
+    },
+    deleteEntityFailure: (state: DashboardState, action: PayloadAction<string>) => {
+      state.deleteInProgress = state.deleteInProgress.filter((it) => it !== action.payload);
+    },
   },
 });
+
+export const isRemovingEntitySelector = (id: string) => (state: RootState) =>
+  state.dashboard.deleteInProgress.includes(id);
 
 export const {
   getPlanesSuccess,
@@ -142,6 +157,9 @@ export const {
   getUsersSuccess,
   getUsersFailure,
   getUsersRequest,
+  deleteEntityRequest,
+  deleteEntityFailure,
+  deleteEntitySuccess,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

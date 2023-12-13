@@ -1,5 +1,11 @@
 import { AssetsState } from '../../../utils/constants.ts';
 
+export type EntityType = 'PLANE' | 'PILOT' | 'FLIGHT';
+export interface DeleteEntityRequest {
+  id: string;
+  type: EntityType;
+}
+
 export enum FlightStatus {
   Planned = 'planned',
   BoardingPlane = 'boarding_plane',
@@ -54,4 +60,5 @@ export interface DashboardState {
   planeCreateFetching: boolean;
   pilotCreateFetching: boolean;
   flightCreateFetching: boolean;
+  deleteInProgress: string[];
 }

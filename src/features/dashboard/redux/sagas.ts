@@ -1,4 +1,4 @@
-import { all, takeLatest, call, select, put } from 'redux-saga/effects';
+import { all, takeLatest, call, select, put, takeEvery } from 'redux-saga/effects';
 
 import {
   createPlaneFailure,
@@ -22,12 +22,16 @@ import {
   getUsersSuccess,
   getUsersFailure,
   getUsersRequest,
+  deleteEntitySuccess,
+  deleteEntityFailure,
+  deleteEntityRequest,
 } from './reducer.ts';
 import { FixTypeLater } from 'react-redux';
 import { getErrorMessage, showToast } from '../../../utils/utility.tsx';
 import { RootState } from '../../../store';
 import { buildHeaders, callApi, endpoints } from '../../../api';
-import { Flight, Pilot, Plane, User } from './types.ts';
+import { DeleteEntityRequest, EntityType, Flight, Pilot, Plane, User } from './types.ts';
+import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 
 export function* getPlanesRequestSaga(): FixTypeLater {
   try {
@@ -142,6 +146,34 @@ export function* getUsersRequestSaga(): FixTypeLater {
   }
 }
 
+export function* deleteEntitySaga({ payload }: { payload: DeleteEntityRequest }): FixTypeLater {
+  try {
+    const state: RootState = yield select();
+
+    const map: Record<EntityType, string> = {
+      FLIGHT: `${endpoints.flights}/${payload.id}`,
+      PILOT: `${endpoints.pilots}/${payload.id}`,
+      PLANE: `${endpoints.planes}/${payload.id}`,
+    };
+
+    yield call(callApi, map[payload.type], buildHeaders(state, undefined, 'DELETE'));
+
+    yield put(deleteEntitySuccess(payload.id));
+    showToast(`Record with id ${payload.id} has been successfully deleted.`);
+
+    const actionMap: Record<EntityType, ActionCreatorWithoutPayload> = {
+      FLIGHT: getFlightsRequest,
+      PILOT: getPilotsRequest,
+      PLANE: getPlanesRequest,
+    };
+
+    yield put(actionMap[payload.type]());
+  } catch (e) {
+    yield put(deleteEntityFailure(payload.id));
+    showToast(getErrorMessage(e));
+  }
+}
+
 export default function* root() {
   yield all([
     takeLatest(getPlanesRequest, getPlanesRequestSaga),
@@ -151,5 +183,6 @@ export default function* root() {
     takeLatest(getFlightsRequest, getFlightsRequestSaga),
     takeLatest(createFlightRequest, createFlightSaga),
     takeLatest(getUsersRequest, getUsersRequestSaga),
+    takeEvery(deleteEntityRequest, deleteEntitySaga),
   ]);
 }
