@@ -32,7 +32,7 @@ const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
       <HStack>
         <IoAirplane size={22} color={colors.black} />
         <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
-          {item.name}
+          {item.name.substring(0, 20)}
         </Text>
       </HStack>
       <Badge variant="subtle" colorScheme={color}>
