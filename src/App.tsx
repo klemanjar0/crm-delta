@@ -7,16 +7,13 @@ import store from './store';
 import './theme/styles.sass';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from './hooks/useAuth.tsx';
 
 function App() {
   return (
     <>
       <ToastContainer />
       <Provider store={store}>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <RouterProvider router={router} />
       </Provider>
     </>
   );
