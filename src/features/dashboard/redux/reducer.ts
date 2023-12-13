@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { DashboardState, Pilot, Plane } from './types.ts';
+import { DashboardState, Flight, Pilot, Plane, User } from './types.ts';
 import { initAssetsState } from '../../../utils/constants.ts';
 import _size from 'lodash/size';
 
@@ -8,8 +8,10 @@ const initialState: DashboardState = {
   flights: initAssetsState(),
   pilots: initAssetsState(),
   planes: initAssetsState(),
+  users: initAssetsState(),
   planeCreateFetching: false,
   pilotCreateFetching: false,
+  flightCreateFetching: false,
 };
 
 export const dashboardSlice = createSlice({
@@ -70,6 +72,51 @@ export const dashboardSlice = createSlice({
     createPilotFailure: (state: DashboardState) => {
       state.pilotCreateFetching = false;
     },
+    getFlightsRequest: (state: DashboardState) => {
+      state.flights.fetching = true;
+      state.flights.data = [];
+      state.flights.error = null;
+      state.flights.total = 0;
+    },
+    getFlightsSuccess: (state: DashboardState, action: PayloadAction<Flight[]>) => {
+      state.flights.fetching = false;
+      state.flights.data = action.payload;
+      state.flights.error = null;
+      state.flights.total = _size(action.payload);
+      state.flights.loaded = true;
+    },
+    getFlightsFailure: (state: DashboardState, action: PayloadAction<string>) => {
+      state.flights.fetching = false;
+      state.flights.error = action.payload;
+      state.flights.loaded = false;
+    },
+    createFlightRequest: (state: DashboardState, _: PayloadAction<Omit<Flight, 'id'>>) => {
+      state.flightCreateFetching = true;
+    },
+    createFlightSuccess: (state: DashboardState) => {
+      state.flightCreateFetching = false;
+    },
+    createFlightFailure: (state: DashboardState) => {
+      state.flightCreateFetching = false;
+    },
+    getUsersRequest: (state: DashboardState) => {
+      state.users.fetching = true;
+      state.users.data = [];
+      state.users.error = null;
+      state.users.total = 0;
+    },
+    getUsersSuccess: (state: DashboardState, action: PayloadAction<User[]>) => {
+      state.users.fetching = false;
+      state.users.data = action.payload;
+      state.users.error = null;
+      state.users.total = _size(action.payload);
+      state.users.loaded = true;
+    },
+    getUsersFailure: (state: DashboardState, action: PayloadAction<string>) => {
+      state.users.fetching = false;
+      state.users.error = action.payload;
+      state.users.loaded = false;
+    },
   },
 });
 
@@ -86,6 +133,15 @@ export const {
   createPilotSuccess,
   createPilotFailure,
   createPilotRequest,
+  getFlightsFailure,
+  getFlightsSuccess,
+  getFlightsRequest,
+  createFlightSuccess,
+  createFlightRequest,
+  createFlightFailure,
+  getUsersSuccess,
+  getUsersFailure,
+  getUsersRequest,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

@@ -7,6 +7,7 @@ import Dashboard from '../features/dashboard/pages/Dashboard/Dashboard.tsx';
 import Planes from '../features/dashboard/pages/Planes/Planes.tsx';
 import DefaultOutlet from '../features/dashboard/pages/DefaultOutlet/DefaultOutlet.tsx';
 import Pilots from '../features/dashboard/pages/Pilots/Pilots.tsx';
+import Flights from '../features/dashboard/pages/Flights/Flights.tsx';
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'flights',
-            element: <div>flights</div>,
+            element: <Flights />,
           },
           {
             path: 'pilots',

@@ -4,6 +4,7 @@ import { AuthState, LoginPayload, RegisterPayload } from './types.ts';
 
 const initialState: AuthState = {
   accessToken: null,
+  username: null,
   isLoggedIn: false,
   fetching: false,
   error: null,
@@ -19,8 +20,12 @@ export const authSlice = createSlice({
     setAccessToken: (state: AuthState, action: PayloadAction<string | null>) => {
       state.accessToken = action.payload;
     },
-    logIn: (state: AuthState, action: PayloadAction<string | null>) => {
-      state.accessToken = action.payload;
+    setUsername: (state: AuthState, action: PayloadAction<string | null>) => {
+      state.username = action.payload;
+    },
+    logIn: (state: AuthState, action: PayloadAction<{ token: string | null; username: string | null }>) => {
+      state.accessToken = action.payload.token;
+      state.username = action.payload.username;
       state.isLoggedIn = true;
     },
     logOut: (state: AuthState) => {
@@ -66,6 +71,7 @@ export const {
   logInSuccess,
   logInFailure,
   logInRequest,
+  setUsername,
   resetAuthError,
 } = authSlice.actions;
 

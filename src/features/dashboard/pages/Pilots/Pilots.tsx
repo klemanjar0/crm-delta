@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { IoChevronForward } from 'react-icons/io5';
+import { IoChevronForward, IoPerson } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { createPilotRequest, getPilotsRequest } from '../../redux/reducer.ts';
@@ -15,17 +15,22 @@ import {
   CardFooter,
   CardHeader,
   Divider,
+  HStack,
   Input,
   Spinner,
   Text,
 } from '@chakra-ui/react';
+import { colors } from '../../../../theme/colors.ts';
 
 const renderPilotItem: React.FC<Pilot> = (item: Pilot) => {
   return (
     <div key={item.id} className="plane-item-card">
-      <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
-        {item.name}
-      </Text>
+      <HStack>
+        <IoPerson size={22} color={colors.black} />
+        <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
+          {item.name}
+        </Text>
+      </HStack>
       <Badge variant="subtle" colorScheme={'purple'}>
         {item.qualification}
       </Badge>

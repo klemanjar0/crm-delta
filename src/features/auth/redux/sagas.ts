@@ -8,6 +8,7 @@ import {
   registerFailure,
   registerRequest,
   registerSuccess,
+  setUsername,
 } from './reducer.ts';
 import { getErrorMessage, showToast } from '../../../utils/utility.tsx';
 import { buildHeaders, callApi, endpoints } from '../../../api';
@@ -23,6 +24,7 @@ export function* registerSaga({ payload }: { payload: RegisterPayload }): FixTyp
     const response = yield call(callApi, endpoints.register, buildHeaders(state, { email, role, password }));
 
     yield put(registerSuccess(response || null));
+    yield put(setUsername(email));
     yield put(setBackScene('/'));
   } catch (e) {
     yield put(registerFailure(getErrorMessage(e)));
@@ -38,6 +40,7 @@ export function* loginSaga({ payload }: { payload: LoginPayload }): FixTypeLater
     const response = yield call(callApi, endpoints.login, buildHeaders(state, { email, password }));
 
     yield put(logInSuccess(response));
+    yield put(setUsername(email));
     yield put(setBackScene('/'));
   } catch (e) {
     yield put(logInFailure(getErrorMessage(e)));

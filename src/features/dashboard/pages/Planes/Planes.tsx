@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import './Planes.styles.sass';
-import { IoChevronForward } from 'react-icons/io5';
+import { IoAirplane, IoChevronForward } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { createPlaneRequest, getPlanesRequest } from '../../redux/reducer.ts';
@@ -17,19 +17,24 @@ import {
   CardFooter,
   CardHeader,
   Divider,
+  HStack,
   Input,
   Select,
   Spinner,
   Text,
 } from '@chakra-ui/react';
+import { colors } from '../../../../theme/colors.ts';
 
 const renderPlaneItem: React.FC<Plane> = (item: Plane) => {
   const { value, color } = parsePlaneStatus(item.status);
   return (
     <div key={item.id} className="plane-item-card">
-      <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
-        {item.name}
-      </Text>
+      <HStack>
+        <IoAirplane size={22} color={colors.black} />
+        <Text style={{ fontSize: 22, fontWeight: 500 }} className="plane-item-card-text">
+          {item.name}
+        </Text>
+      </HStack>
       <Badge variant="subtle" colorScheme={color}>
         {value}
       </Badge>

@@ -3,7 +3,6 @@ import _set from 'lodash/set';
 import { RootState } from '../store';
 import DispatchService from '../services/DispatchService.ts';
 import { logOut } from '../features/auth/redux/reducer.ts';
-import { toast } from 'react-toastify';
 import { showToast } from '../utils/utility.tsx';
 
 export const endpoints = {
@@ -11,6 +10,8 @@ export const endpoints = {
   register: '/api/v1/auth/register',
   planes: '/api/v1/planes',
   pilots: '/api/v1/pilots',
+  flights: '/api/v1/flights',
+  users: '/api/v1/users',
 };
 
 const server = 'http://localhost:5270';

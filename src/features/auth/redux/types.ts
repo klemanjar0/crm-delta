@@ -1,5 +1,6 @@
 export interface AuthState {
   accessToken: string | null;
+  username: string | null;
   isLoggedIn: boolean;
   fetching: boolean;
   error: string | null;
