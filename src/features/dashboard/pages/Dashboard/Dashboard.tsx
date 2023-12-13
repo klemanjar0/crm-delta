@@ -28,7 +28,6 @@ import {
 import { RootState } from '../../../../store';
 import { getUsersRequest } from '../../redux/reducer.ts';
 import { colors } from '../../../../theme/colors.ts';
-import { uniqueId } from 'lodash';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
