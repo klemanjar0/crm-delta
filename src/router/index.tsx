@@ -29,10 +29,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: 'settings/',
-      //   element: <div>Settings!</div>,
-      // },
       {
         path: '',
         element: <Dashboard />,

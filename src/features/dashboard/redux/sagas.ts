@@ -25,12 +25,15 @@ import {
   deleteEntitySuccess,
   deleteEntityFailure,
   deleteEntityRequest,
+  updateFlightStatusSuccess,
+  updateFlightStatusFailure,
+  updateFlightStatusRequest,
 } from './reducer.ts';
 import { FixTypeLater } from 'react-redux';
 import { getErrorMessage, showToast } from '../../../utils/utility.tsx';
 import { RootState } from '../../../store';
 import { buildHeaders, callApi, endpoints } from '../../../api';
-import { DeleteEntityRequest, EntityType, Flight, Pilot, Plane, User } from './types.ts';
+import { DeleteEntityRequest, EntityType, Flight, Pilot, Plane, UpdateFlightStatusRequest, User } from './types.ts';
 import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit';
 
 export function* getPlanesRequestSaga(): FixTypeLater {
@@ -174,6 +177,22 @@ export function* deleteEntitySaga({ payload }: { payload: DeleteEntityRequest })
   }
 }
 
+export function* updateFlightSaga({ payload }: { payload: UpdateFlightStatusRequest }): FixTypeLater {
+  try {
+    const state: RootState = yield select();
+    const { status, comment } = payload;
+
+    yield call(callApi, `${endpoints.flights}/${payload.id}`, buildHeaders(state, { status, comment }, 'PUT'));
+
+    yield put(updateFlightStatusSuccess(payload.id));
+    showToast(`Flight status has been successfully created.`);
+    yield put(getFlightsRequest());
+  } catch (e) {
+    yield put(updateFlightStatusFailure(payload.id));
+    showToast(getErrorMessage(e));
+  }
+}
+
 export default function* root() {
   yield all([
     takeLatest(getPlanesRequest, getPlanesRequestSaga),
@@ -184,5 +203,6 @@ export default function* root() {
     takeLatest(createFlightRequest, createFlightSaga),
     takeLatest(getUsersRequest, getUsersRequestSaga),
     takeEvery(deleteEntityRequest, deleteEntitySaga),
+    takeEvery(updateFlightStatusRequest, updateFlightSaga),
   ]);
 }

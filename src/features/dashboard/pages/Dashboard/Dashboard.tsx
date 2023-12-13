@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './Dashboard.styles.sass';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../../../auth/redux/reducer.ts';
+import { logOut, registerRequest, registerSilentRequest } from '../../../auth/redux/reducer.ts';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -14,6 +14,8 @@ import {
   Box,
   Button,
   Center,
+  Divider,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -29,6 +31,8 @@ import { RootState } from '../../../../store';
 import { getUsersRequest } from '../../redux/reducer.ts';
 import { colors } from '../../../../theme/colors.ts';
 
+const initialUserState = { email: '', password: '', role: 'regular' };
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,7 +42,10 @@ const Dashboard: React.FC = () => {
   const modal = useDisclosure();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null);
-
+  const [user, setUser] = useState<typeof initialUserState>(initialUserState);
+  const onChange = (e: any) => {
+    setUser((user) => ({ ...user, [e.target.name]: e.target.value }));
+  };
   const onFlights = () => {
     navigate('flights', { relative: 'route' });
   };
@@ -66,6 +73,11 @@ const Dashboard: React.FC = () => {
       dispatch(getUsersRequest());
     }
   }, []);
+
+  const onSubmit = () => {
+    dispatch(registerSilentRequest(user));
+    setUser(initialUserState);
+  };
 
   return (
     <>
@@ -129,6 +141,24 @@ const Dashboard: React.FC = () => {
           <ModalHeader>System users</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <Divider />
+            <Box w={2} h={2} />
+            <Text>Add new user</Text>
+            <Box w={2} h={2} />
+            <Input placeholder={'Email'} key="email" name="email" value={user.email} onInput={onChange} />
+            <Box w={2} h={2} />
+            <Input placeholder={'Password'} key="password" name="password" value={user.password} onInput={onChange} />
+            <Box w={2} h={2} />
+            <Button flex={1} onClick={onSubmit}>
+              <Text>Submit</Text>
+            </Button>
+            <Box w={2} h={2} />
+
+            <Divider />
+            <Box w={2} h={8} />
+            <Text>Users</Text>
+            <Box w={2} h={2} />
+
             {assets.fetching ? (
               <Center>
                 <Spinner />

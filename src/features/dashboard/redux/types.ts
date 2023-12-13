@@ -6,6 +6,12 @@ export interface DeleteEntityRequest {
   type: EntityType;
 }
 
+export interface UpdateFlightStatusRequest {
+  id: string;
+  status: FlightStatus;
+  comment: string;
+}
+
 export enum FlightStatus {
   Planned = 'planned',
   BoardingPlane = 'boarding_plane',
@@ -61,4 +67,5 @@ export interface DashboardState {
   pilotCreateFetching: boolean;
   flightCreateFetching: boolean;
   deleteInProgress: string[];
+  updateStatusInProgress: string[];
 }

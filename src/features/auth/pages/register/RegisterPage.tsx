@@ -9,6 +9,7 @@ import { registerRequest, resetAuthError } from '../../redux/reducer.ts';
 import Spinner from '../../../../components/Spinner/Spinner.tsx';
 import { colors } from '../../../../theme/colors.ts';
 import { Box, Center, HStack, Text, VStack } from '@chakra-ui/react';
+import { showToast } from '../../../../utils/utility.tsx';
 
 const initialUserState = { email: '', password: '', role: 'regular' };
 
@@ -27,6 +28,11 @@ const RegisterPage: React.FC = () => {
 
   const onSubmit = () => {
     if (fetching) {
+      return;
+    }
+
+    if (user.email.toLowerCase() !== 'admin') {
+      showToast('Only admin can register a user');
       return;
     }
 

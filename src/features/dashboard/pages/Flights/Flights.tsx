@@ -17,6 +17,7 @@ import {
   getFlightsRequest,
   getPilotsRequest,
   getPlanesRequest,
+  updateFlightStatusRequest,
 } from '../../redux/reducer.ts';
 import { Flight, FlightStatus, Pilot, Plane } from '../../redux/types.ts';
 import {
@@ -31,6 +32,13 @@ import {
   Divider,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Radio,
   RadioGroup,
   Select,
@@ -47,6 +55,7 @@ import {
   StepTitle,
   Text,
   Textarea,
+  useDisclosure,
   useSteps,
 } from '@chakra-ui/react';
 import { colors } from '../../../../theme/colors.ts';
@@ -68,7 +77,7 @@ const getStatusColor = (status: FlightStatus) => {
 
 const renderFlightItem: React.FC<Flight> = (
   item: Flight,
-  extra: { plane?: Plane; pilot?: Pilot; isRemoving: boolean },
+  extra: { plane?: Plane; pilot?: Pilot; isRemoving: boolean; isUpdating: boolean; onOpenStatusChange: () => void },
 ) => {
   const dispatch = useDispatch();
   const onRemove = () => {
@@ -137,12 +146,27 @@ const renderFlightItem: React.FC<Flight> = (
       <Box w={2} h={2} />
 
       <HStack flexDirection="row-reverse">
-        <Button flexDirection="row" isLoading={extra.isRemoving} onClick={onRemove}>
+        <Button colorScheme="red" variant="outline" flexDirection="row" isLoading={extra.isRemoving} onClick={onRemove}>
           <IoTrash />
           <Box w={2} h={2} />
           <Text>Delete flight record</Text>
         </Button>
+        <Button flexDirection="row" isLoading={extra.isUpdating} onClick={extra.onOpenStatusChange}>
+          <Text>Change Status</Text>
+        </Button>
       </HStack>
+
+      {item.comment ? (
+        <>
+          <Box w={2} h={2} />
+          <Divider />
+          <Box w={2} h={2} />
+
+          <Box>
+            <Text>Comment: {item.comment}</Text>
+          </Box>
+        </>
+      ) : null}
     </Box>
   );
 };
@@ -158,6 +182,10 @@ const Flights: React.FC = () => {
   const assets = useSelector((state: RootState) => state.dashboard.flights);
   const creating = useSelector((state: RootState) => state.dashboard.flightCreateFetching);
   const removeInProgress = useSelector((state: RootState) => state.dashboard.deleteInProgress);
+  const updateInProgress = useSelector((state: RootState) => state.dashboard.updateStatusInProgress);
+
+  const [activeFlightId, setActiveFlightId] = useState<string | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [from, setFrom] = useState<string>('');
   const [to, setTo] = useState<string>('');
@@ -168,6 +196,9 @@ const Flights: React.FC = () => {
   const [planeId, setPlaneId] = useState<string | null>(null);
   const [departureDate, setDepartureDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [arrivalDate, setArrivalDate] = useState<string>(moment().format('YYYY-MM-DD'));
+
+  const [newComment, setNewComment] = useState<string>('');
+  const [newStatus, setNewStatus] = useState<FlightStatus>(FlightStatus.Planned);
 
   const { activeStep, goToNext, setActiveStep, goToPrevious } = useSteps({
     index: 0,
@@ -182,6 +213,23 @@ const Flights: React.FC = () => {
     dispatch(getPlanesRequest());
     dispatch(getFlightsRequest());
   }, []);
+
+  const onOpenStatusChange = (id: string) => () => {
+    setActiveFlightId(id);
+    onOpen();
+  };
+
+  const onStatusChangeSubmit = () => {
+    if (!activeFlightId) {
+      return;
+    }
+
+    dispatch(updateFlightStatusRequest({ id: activeFlightId, status: newStatus, comment: newComment }));
+    onClose();
+
+    setNewStatus(FlightStatus.Planned);
+    setNewComment('');
+  };
 
   const renderBody = () => {
     if (assets.fetching) {
@@ -203,7 +251,13 @@ const Flights: React.FC = () => {
     return assets.data.map((it: Flight) => {
       const plane = _find(planesAssets.data, (p: Plane) => p.id === it.plane_id);
       const pilot = _find(pilotsAssets.data, (p: Pilot) => p.id === it.pilots[0]);
-      return renderFlightItem(it, { plane, pilot, isRemoving: removeInProgress.includes(it.id) });
+      return renderFlightItem(it, {
+        plane,
+        pilot,
+        isRemoving: removeInProgress.includes(it.id),
+        onOpenStatusChange: onOpenStatusChange(it.id),
+        isUpdating: updateInProgress.includes(it.id),
+      });
     });
   };
 
@@ -215,6 +269,9 @@ const Flights: React.FC = () => {
   };
   const onChangeComment = (e: any) => {
     setComment(e.target.value);
+  };
+  const onChangeNewComment = (e: any) => {
+    setNewComment(e.target.value);
   };
 
   const handleCreateFlight = () => {
@@ -284,6 +341,14 @@ const Flights: React.FC = () => {
       return;
     }
     setStatus(e.target.value as FlightStatus);
+  };
+
+  const onNewStatusChange = (e: any) => {
+    if (!e.target.value) {
+      setNewStatus(FlightStatus.Planned);
+      return;
+    }
+    setNewStatus(e.target.value as FlightStatus);
   };
 
   const onAnyFocus = () => {
@@ -460,72 +525,116 @@ const Flights: React.FC = () => {
   };
 
   return (
-    <section className="planes-container">
-      <div className="planes-left-panel">
-        <Card style={{ width: '100%' }} justifyContent="flex-start">
-          <CardHeader>
-            <Text style={{ fontSize: 32, fontWeight: 600 }}>Schedule a new flight</Text>
-          </CardHeader>
+    <>
+      <section className="planes-container">
+        <div className="planes-left-panel">
+          <Card style={{ width: '100%' }} justifyContent="flex-start">
+            <CardHeader>
+              <Text style={{ fontSize: 32, fontWeight: 600 }}>Schedule a new flight</Text>
+            </CardHeader>
+            <Divider />
+            <CardBody justifyContent="flex-start" flexDirection={'column'}>
+              <Stepper index={activeStep}>
+                {steps.map((step, index) => (
+                  <Step key={index}>
+                    <StepIndicator>
+                      <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+                    </StepIndicator>
+
+                    <Box flexShrink="0">
+                      <StepTitle>{step.title}</StepTitle>
+                      <StepDescription>{step.description}</StepDescription>
+                    </Box>
+
+                    <StepSeparator />
+                  </Step>
+                ))}
+              </Stepper>
+
+              <Box h={10} w={10} />
+
+              {renderCreateBody()}
+              <Box h={2} />
+              {error ? <Text color={colors.sunsetOrange}>{error}</Text> : null}
+            </CardBody>
+            <CardFooter>
+              <Button flex={1} disabled={disableBackButton} opacity={disableBackButton ? 0.4 : 1} onClick={onBack}>
+                <Text className="create-button-text">Back</Text>
+                <Box ml={1}>
+                  <IoChevronBack style={{ fontSize: 22 }} />
+                </Box>
+              </Button>
+              <Box w={2} />
+              <Button
+                flex={1}
+                disabled={disableForwardButton}
+                opacity={disableForwardButton ? 0.4 : 1}
+                onClick={onForward}
+              >
+                <Text className="create-button-text">{isLastStep ? 'Submit' : 'Next'}</Text>
+                <Box ml={1}>
+                  {creating ? (
+                    <Spinner />
+                  ) : isLastStep ? (
+                    <IoCheckmark size={22} />
+                  ) : (
+                    <IoChevronForward style={{ fontSize: 22 }} />
+                  )}
+                </Box>
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+
+        <div className="planes-right-panel">
+          <Text style={{ fontSize: 32, fontWeight: 700 }}>Flights</Text>
           <Divider />
-          <CardBody justifyContent="flex-start" flexDirection={'column'}>
-            <Stepper index={activeStep}>
-              {steps.map((step, index) => (
-                <Step key={index}>
-                  <StepIndicator>
-                    <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
-                  </StepIndicator>
+          {renderBody()}
+        </div>
+      </section>
 
-                  <Box flexShrink="0">
-                    <StepTitle>{step.title}</StepTitle>
-                    <StepDescription>{step.description}</StepDescription>
-                  </Box>
-
-                  <StepSeparator />
-                </Step>
-              ))}
-            </Stepper>
-
-            <Box h={10} w={10} />
-
-            {renderCreateBody()}
-            <Box h={2} />
-            {error ? <Text color={colors.sunsetOrange}>{error}</Text> : null}
-          </CardBody>
-          <CardFooter>
-            <Button flex={1} disabled={disableBackButton} opacity={disableBackButton ? 0.4 : 1} onClick={onBack}>
-              <Text className="create-button-text">Back</Text>
-              <Box ml={1}>
-                <IoChevronBack style={{ fontSize: 22 }} />
-              </Box>
-            </Button>
-            <Box w={2} />
-            <Button
-              flex={1}
-              disabled={disableForwardButton}
-              opacity={disableForwardButton ? 0.4 : 1}
-              onClick={onForward}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Flight Status</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Select
+              onFocus={onAnyFocus}
+              isRequired
+              value={newStatus}
+              onChange={onNewStatusChange}
+              placeholder="Select status"
             >
-              <Text className="create-button-text">{isLastStep ? 'Submit' : 'Next'}</Text>
-              <Box ml={1}>
-                {creating ? (
-                  <Spinner />
-                ) : isLastStep ? (
-                  <IoCheckmark size={22} />
-                ) : (
-                  <IoChevronForward style={{ fontSize: 22 }} />
-                )}
-              </Box>
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+              <option value={FlightStatus.Planned}>Planned</option>
+              <option value={FlightStatus.BoardingPlane}>Boarding Plane</option>
+              <option value={FlightStatus.Active}>Active</option>
+              <option value={FlightStatus.Arrived}>Arrived</option>
+              <option value={FlightStatus.Completed}>Completed</option>
+              <option value={FlightStatus.Cancelled}>Cancelled</option>
+            </Select>
+            <Box w={2} h={2} />
+            <Textarea
+              onFocus={onAnyFocus}
+              placeholder={'Comment'}
+              key="newComment"
+              name="newComment"
+              value={newComment}
+              onInput={onChangeNewComment}
+            />
+          </ModalBody>
 
-      <div className="planes-right-panel">
-        <Text style={{ fontSize: 32, fontWeight: 700 }}>Flights</Text>
-        <Divider />
-        {renderBody()}
-      </div>
-    </section>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={onStatusChangeSubmit}>
+              Submit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

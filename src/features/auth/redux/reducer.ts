@@ -34,6 +34,8 @@ export const authSlice = createSlice({
     },
     registerRequest: (state: AuthState, _: PayloadAction<RegisterPayload>) => {
       state.fetching = true;
+      state.accessToken = null;
+      state.isLoggedIn = false;
     },
     registerSuccess: (state: AuthState, action: PayloadAction<string>) => {
       state.fetching = false;
@@ -45,8 +47,18 @@ export const authSlice = createSlice({
       state.error = action.payload;
       state.isLoggedIn = false;
     },
+    registerSilentRequest: (state: AuthState, _: PayloadAction<RegisterPayload>) => {
+      state.fetching = true;
+    },
+    registerSilentSuccess: (state: AuthState) => {
+      state.fetching = false;
+    },
+    registerSilentFailure: (state: AuthState) => {
+      state.fetching = false;
+    },
     logInRequest: (state: AuthState, _: PayloadAction<LoginPayload>) => {
       state.fetching = true;
+      state.isLoggedIn = false;
     },
     logInSuccess: (state: AuthState, action: PayloadAction<string>) => {
       state.fetching = false;
@@ -73,6 +85,9 @@ export const {
   logInRequest,
   setUsername,
   resetAuthError,
+  registerSilentFailure,
+  registerSilentSuccess,
+  registerSilentRequest,
 } = authSlice.actions;
 
 export default authSlice.reducer;

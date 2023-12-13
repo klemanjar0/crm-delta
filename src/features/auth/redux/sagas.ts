@@ -7,6 +7,9 @@ import {
   logOut,
   registerFailure,
   registerRequest,
+  registerSilentFailure,
+  registerSilentRequest,
+  registerSilentSuccess,
   registerSuccess,
   setUsername,
 } from './reducer.ts';
@@ -15,6 +18,7 @@ import { buildHeaders, callApi, endpoints } from '../../../api';
 import { RootState } from '../../../store';
 import { FixTypeLater } from 'react-redux';
 import { setBackScene } from '../../../router/redux/reducer.ts';
+import { getUsersRequest } from '../../dashboard/redux/reducer.ts';
 
 export function* registerSaga({ payload }: { payload: RegisterPayload }): FixTypeLater {
   try {
@@ -29,6 +33,21 @@ export function* registerSaga({ payload }: { payload: RegisterPayload }): FixTyp
   } catch (e) {
     yield put(registerFailure(getErrorMessage(e)));
     showToast('Something wrong during register.');
+  }
+}
+
+export function* registerSilentSaga({ payload }: { payload: RegisterPayload }): FixTypeLater {
+  try {
+    const { email, role, password } = payload;
+    const state: RootState = yield select();
+
+    yield call(callApi, endpoints.register, buildHeaders(state, { email, role, password }));
+
+    yield put(registerSilentSuccess());
+    yield put(getUsersRequest());
+  } catch (e) {
+    yield put(registerSilentFailure(getErrorMessage(e)));
+    showToast('Something wrong during creating user.');
   }
 }
 
@@ -57,5 +76,6 @@ export default function* root() {
     takeLatest(registerRequest, registerSaga),
     takeLatest(logInRequest, loginSaga),
     takeLatest(logOut, logOutSaga),
+    takeLatest(registerSilentRequest, registerSilentSaga),
   ]);
 }

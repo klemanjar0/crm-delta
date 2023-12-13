@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { DashboardState, DeleteEntityRequest, Flight, Pilot, Plane, User } from './types.ts';
+import { DashboardState, DeleteEntityRequest, Flight, Pilot, Plane, UpdateFlightStatusRequest, User } from './types.ts';
 import { initAssetsState } from '../../../utils/constants.ts';
 import _size from 'lodash/size';
 import { RootState } from '../../../store';
@@ -15,6 +15,7 @@ const initialState: DashboardState = {
   pilotCreateFetching: false,
   flightCreateFetching: false,
   deleteInProgress: [],
+  updateStatusInProgress: [],
 };
 
 export const dashboardSlice = createSlice({
@@ -129,6 +130,15 @@ export const dashboardSlice = createSlice({
     deleteEntityFailure: (state: DashboardState, action: PayloadAction<string>) => {
       state.deleteInProgress = state.deleteInProgress.filter((it) => it !== action.payload);
     },
+    updateFlightStatusRequest: (state: DashboardState, action: PayloadAction<UpdateFlightStatusRequest>) => {
+      state.updateStatusInProgress = [...state.updateStatusInProgress, action.payload.id];
+    },
+    updateFlightStatusSuccess: (state: DashboardState, action: PayloadAction<string>) => {
+      state.updateStatusInProgress = state.updateStatusInProgress.filter((it) => it !== action.payload);
+    },
+    updateFlightStatusFailure: (state: DashboardState, action: PayloadAction<string>) => {
+      state.updateStatusInProgress = state.updateStatusInProgress.filter((it) => it !== action.payload);
+    },
   },
 });
 
@@ -160,6 +170,9 @@ export const {
   deleteEntityRequest,
   deleteEntityFailure,
   deleteEntitySuccess,
+  updateFlightStatusRequest,
+  updateFlightStatusSuccess,
+  updateFlightStatusFailure,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
